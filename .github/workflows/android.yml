@@ -14,7 +14,12 @@ jobs:
 
     - name: Unzip App Folder
       run: |
-        unzip app.zip -d app/
+        unzip app.zip -d app/ || true
+        # اگر پوشه‌ها جابه‌جا شده باشند، آن‌ها را در مسیر درست مرتب می‌کند
+        if [ -d "app/app" ]; then
+          cp -r app/app/* app/
+          rm -rf app/app
+        fi
         rm -f app.zip
       continue-on-error: true
 
@@ -30,10 +35,10 @@ jobs:
         chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew :app:assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: "**/build/outputs/apk/debug/*.apk"
