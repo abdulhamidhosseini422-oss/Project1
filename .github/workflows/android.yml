@@ -12,10 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Unzip project files
+    - name: Unzip App Folder
       run: |
-        unzip Project.zip -d .
-        continue-on-error: true
+        unzip app.zip -d app/
+        rm -f app.zip
+      continue-on-error: true
 
     - name: set up JDK 17
       uses: actions/setup-java@v4
@@ -23,7 +24,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Generate Missing Gradle Wrapper
+    - name: Setup Gradle
       run: |
         gradle wrapper --gradle-version 8.4
         chmod +x gradlew
